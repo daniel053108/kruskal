@@ -1,7 +1,8 @@
 #include "Nodo.h"
+#include <stdio.h>
 
 void init_graph(graph* graph){
-    graph->path_list = (path*)malloc(sizeof(path));
+    graph->path_list = (path**)malloc(sizeof(path*));
     graph->cant_edges = -1;
 }
 
@@ -23,4 +24,15 @@ void addEdge(char* name_origin, int weigth, char* name_destination, graph* graph
     newPath->destination = destination;
     newPath->weigth = weigth;
 
+    pushEdge(graph, newPath);
+}
+
+void printGraph(graph graph){
+    printf("cantidad de caminos: %d\n", graph.cant_edges);
+
+    printf("|CAMINOS|\n");
+    for(int i = 0; i <= graph.cant_edges; i++){
+        path* path = graph.path_list[i];
+        printf("|%s|%d|%s|\n",path->origin->name, path->weigth, path->destination->name);  
+    }
 }

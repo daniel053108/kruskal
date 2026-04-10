@@ -16,3 +16,9 @@ typedef struct _graph{
 }graph;
 
 void init_graph(graph* graph);
+
+void addEdge(char* name_origin, int weigth, char* name_destination, graph* graph);
+
+void pushEdge(graph* graph, path* path);
+
+void printGraph(graph graph);
