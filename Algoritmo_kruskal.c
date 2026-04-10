@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Nodo.h"
+#include "KruskalUtils.h"
 
 int main(void){
     
-    graph graph;
+    Graph graph;
+    initNodeList(&sin_visitar, "Nodos Sin Visitar");
+    initNodeList(&visitados, "Nodos Visitados");
 
     init_graph(&graph);
 
@@ -13,6 +15,9 @@ int main(void){
     addEdge("2", 400, "3", &graph);
 
     printGraph(graph);
+
+    printNodeList(sin_visitar);
+    printNodeList(visitados);
     
     return 0;
 }

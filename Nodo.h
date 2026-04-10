@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 typedef struct _node{
@@ -8,17 +9,18 @@ typedef struct _path{
     int weigth;
     Node* origin;
     Node* destination;
-}path;
+}Path;
 
 typedef struct _graph{
-    path** path_list;
+    Path** path_list;
     int cant_edges;
-}graph;
+    int max_edges;
+}Graph;
 
-void init_graph(graph* graph);
+void init_graph(Graph* graph);
 
-void addEdge(char* name_origin, int weigth, char* name_destination, graph* graph);
+void addEdge(char* name_origin, int weigth, char* name_destination, Graph* graph);
 
-void pushEdge(graph* graph, path* path);
+void pushEdge(Graph* graph, Path* path);
 
-void printGraph(graph graph);
+void printGraph(Graph graph);
