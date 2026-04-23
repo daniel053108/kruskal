@@ -26,6 +26,10 @@ int isDuplicated(NodeList _nodeList, Node* _node){
     return 0;
 }
 
+void orderNodesList(NodeList* _nodeList){
+    
+}
+
 void printNodeList(NodeList _nodeList){
     printf("%s:", _nodeList.name);
     printf("[");
