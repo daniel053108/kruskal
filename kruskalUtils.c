@@ -26,10 +26,6 @@ int isDuplicated(NodeList _nodeList, Node* _node){
     return 0;
 }
 
-void orderNodesList(NodeList* _nodeList){
-    
-}
-
 void printNodeList(NodeList _nodeList){
     printf("%s:", _nodeList.name);
     printf("[");
@@ -37,4 +33,24 @@ void printNodeList(NodeList _nodeList){
         printf("%s,", _nodeList.nodes[i]->name);
     }  
     printf("]\n");
+}
+
+void sort_edges(Graph* graph){
+    int cantidad = graph->cant_edges;
+    int i ,k = cantidad/2;
+    Path* actual;
+    int anterior;
+
+    while(k>0){
+        for(i=k;i<cantidad;i++){
+            actual = graph->path_list[i];
+            anterior = i;
+            while(anterior >= k && graph->path_list[anterior - k]->weigth > actual->weigth){
+                graph->path_list[anterior] = graph->path_list[anterior- k];
+                anterior-=k;
+            }
+            graph->path_list[anterior] = actual;
+        }
+        k = k/2;
+    }   
 }

@@ -10,9 +10,13 @@ int main(void){
 
     init_graph(&graph);
 
-    addEdge("1", 100, "2", &graph);
-    addEdge("1", 200, "3", &graph);
-    addEdge("2", 400, "3", &graph);
+    addEdge("1", 400, "2", &graph);
+    addEdge("1", 100, "3", &graph);
+    addEdge("2", 200, "3", &graph);
+
+    printGraph(graph);
+
+    sort_edges(&graph);
 
     printGraph(graph);
 
