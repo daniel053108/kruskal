@@ -1,37 +1,36 @@
-#include "KruskalUtils.h"
+#include "Nodo.h"
+#include <stdio.h>
+#include "utils.h"
 
 void init_graph(Graph* graph){
-    graph->cant_edges = 0;
-    graph->max_edges = 10;
-    graph->path_list = (Path**)malloc(graph->max_edges*sizeof(Path*));
+    initList(&graph->path_list, "Lista de Caminos");
 }
 
 void pushEdge(Graph* graph, Path* path){
-    if((graph->cant_edges + 1) == graph->max_edges){
-        graph->max_edges += 10;
-        graph->path_list = (Path**)realloc(graph->path_list, graph->max_edges * sizeof(Path*));
-    }
-    graph->path_list[graph->cant_edges] = path; 
-    graph->cant_edges++;
+    pushList(&graph->path_list, path);
 }
 
-void addEdge(char* name_origin, int weigth, char* name_destination, Graph* graph){
-    Node* origin = (Node*)malloc(sizeof(Node));
-    origin->name = name_origin;
+void addEdge(char* name_origin, int weigth, char* name_destination, Graph* graph, List* sin_visitar){
+    Node* origin = existeNodo(name_origin,sin_visitar);
+    Node* destination = existeNodo(name_destination,sin_visitar);
 
-    Node* destination = (Node*)malloc(sizeof(Node));
-    destination->name = name_destination;
+
+    if(!origin){
+        origin = (Node*)malloc(sizeof(Node));
+        origin->name = name_origin;
+        origin->padre = origin;
+        pushList(sin_visitar,origin);
+    }
+    
+    
+    if(!destination){
+        destination = (Node*)malloc(sizeof(Node));
+        destination->name = name_destination;
+        destination->padre = destination;
+        pushList(sin_visitar,destination);
+    }
 
     Path* newPath = (Path*)malloc(sizeof(Path));
-
-    if(!isDuplicated(sin_visitar, origin)){
-        pushNodeList(&sin_visitar, origin);
-    }
-
-    if(!isDuplicated(sin_visitar, destination)){
-        pushNodeList(&sin_visitar, destination);
-    }
-
     
     newPath->origin = origin;
     newPath->destination = destination;
@@ -41,12 +40,55 @@ void addEdge(char* name_origin, int weigth, char* name_destination, Graph* graph
 }
 
 void printGraph(Graph graph){
-    printf("cantidad de caminos: %d\n", graph.cant_edges);
+    printf("cantidad de caminos: %d\n", graph.path_list.cant_items);
 
     printf("|CAMINOS|\n");
     printf("|ORIGEN|PESO|DESTINO\n");
-    for(int i = 0; i <= graph.cant_edges - 1; i++){
-        Path* path = graph.path_list[i];
-        printf("|%s|%d|%s|\n",path->origin->name, path->weigth, path->destination->name);  
+    NodoItem* current = graph.path_list.head;
+    while(current != NULL){
+        Path path = *((Path*) (current->item));
+        printPath(path);
+        current = current->next;
+    }
+}
+
+void printPath(Path path){
+    printf("|%s|%d|%s|\n",path.origin->name, path.weigth, path.destination->name);  
+}
+
+void printNodeList(List list){
+    printf("%s: [", list.name);
+    NodoItem* current = list.head;
+    while(current != NULL){
+        Node node = *((Node*) (current->item));
+        printf("%s, ", node.name);
+        current = current->next;
+    }
+    printf("]\n");
+}
+
+void printNodo(Node node){
+    printf("Nodo: %s\n", node.name);
+}
+    
+Node* existeNodo(char* nombre, List* lista){
+    for(int i = 0; i < lista->cant_items; i++){
+        if(!string_cmp(nombre, ((Node*)itemOf(*lista, i))->name) == 0){
+            return ((Node*)itemOf(*lista, i));
+        }
+    }
+    return NULL;
+}
+
+void printAEM(Graph graph, int costo){
+    printf("----RESULTADO----\n");
+    printf("cantidad de caminos: %d\n", graph.path_list.cant_items);
+    printf("COSTO CAMINO: %d\n",costo);
+    printf("|CAMINOS|\n");
+    printf("|ORIGEN|PESO|DESTINO\n");
+    NodoItem* current = graph.path_list.head;
+    while(current != NULL){
+        printPath(*((Path*)current->item));
+        current = current->next;
     }
 }
