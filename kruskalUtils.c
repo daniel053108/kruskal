@@ -24,23 +24,37 @@ void sort_edges(Graph* graph){
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //Algoritmo Kruskal
 
-void kruskal(Graph* graph,Graph* resultado,int* costoTotal,int cantidadNodos){
+void kruskal(Graph* graph,Graph* resultado,int* costoTotal,List* sin_visitar, List* visitados){
     //recorrer la lista de los paths
+    List sin_visitar_aux = *sin_visitar;
     int cantidad = graph->path_list.cant_items;
     int contador = 0;
-
     for(int i =0; i< cantidad;i++){
-        Node* raizOrigen = encontrar_padre(((Path*)itemOf(graph->path_list, i))->origin);
-        Node* raizDestino = encontrar_padre(((Path*)itemOf(graph->path_list, i))->destination);
+        Path* current_path = (Path*)itemOf(graph->path_list, i);
+        printf("\nRevisando Camino: %s - %s, peso: %d\n", current_path->origin->name, current_path->destination->name, current_path->weigth);
+        
+        Node* raizOrigen = encontrar_padre(current_path->origin);
+        Node* raizDestino = encontrar_padre(current_path->destination);
 
-        if(raizDestino != raizOrigen && contador <= cantidadNodos-1){
+        if(raizDestino != raizOrigen && contador < sin_visitar->cant_items ){
+            printf("Camino agregado!!\n");
             raizOrigen->padre = raizDestino;
+            if(!inList(*visitados, raizOrigen)){
+                pushList(visitados, raizOrigen);
+               popIn(&sin_visitar_aux,indexOf(sin_visitar_aux, raizOrigen));
+            }
+            if(!inList(*visitados, raizDestino)){
+                pushList(visitados, raizDestino);
+                popIn(&sin_visitar_aux,indexOf(sin_visitar_aux, raizDestino));
+            }
             Path* path = (Path*)itemOf(graph->path_list, i);
-            
             pushEdge(resultado, path);
             *costoTotal+= path->weigth;
             contador++;
         }
+
+        printNodeList(sin_visitar_aux);
+        printNodeList(*visitados);
     }
 
 }  

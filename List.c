@@ -42,6 +42,36 @@ void* dequeue(List* list){
     return returnItem;
 }
 
+void* popIn(List* list, int idx){
+    if(idx >= list->cant_items || idx < 0){
+        return NULL;
+    }
+
+    NodoItem* current = list->head;
+    for(int i = 0; i < idx; i++){
+        current = current->next;
+    }
+
+    void* returnItem = current->item;
+
+    if(current == list->head){
+        list->head = current->next;
+    }
+
+    if(current == list->tail){
+        list->tail = current->prev;
+    }
+
+    if(current->prev != NULL){
+        current->prev->next = current->next;
+    }
+
+    if(current->next != NULL){
+        current->next->prev = current->prev;
+    }
+
+}
+
 int isEmpty(List list){
     return list.cant_items == 0;
 }
@@ -66,6 +96,19 @@ void* itemOf(List list, int idx){
         current = current->next;
     }
     return current->item;
+}
+
+int indexOf(List list, void* item){
+    int idx = 0;
+    NodoItem* current = list.head;
+    while(current != NULL){
+        if(current->item == item){
+            return idx;
+        }
+        current = current->next;
+        idx++;
+    }
+    return -1;
 }
 
 int pushItemIn(List* list, void* item, int idx, int freeMemory){
